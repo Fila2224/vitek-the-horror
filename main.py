@@ -11,6 +11,7 @@ vitek_motivation = 0
 chodba_loot = ["tadeas"]
 
 
+
 def falsich(veta, odpovedi):
     Flas = True
     while Flas:
@@ -38,6 +39,51 @@ class Vitek:
             time.sleep(2)
             print("GAME OVER")
             sys.exit(128)
+    def Pohyb(self,lokace):
+        vitek_turn = True
+        if self.lokace == "telocvicna" and vitek_turn:
+            if random.randint(0,1) == 1:
+                self.lokace = "satna"
+                vitek_turn = False
+        if self.lokace == "satna" and   vitek_turn:
+            vitek_turn = False
+            a = random.randint(0,3)
+            if a == 3:
+                self.lokace = "satna"
+            if a== 2:
+                self.lokace = "telocvicna"
+            if a == 1:
+                self.lokace = ("chodba")
+        if self.lokace == "chodba"and vitek_turn:
+            vitek_turn = False
+            b = random.randint(0,8)
+            if b == 0:
+                self.lokace == "satna"
+            if b == 1 :
+                self.lokace == "zachody"
+            if b == 5:
+                self.lokace = "01"
+            if b ==2 or b ==7 or b ==3:
+                self.lokace = "2patro"
+        if self.lokace == "2patro" and vitek_turn:
+            vitek_turn = False
+            c = random.randint(0,2)
+            if c == 2:
+                self.lokace = "chodba"
+        if self.lokace == "zachody" and vitek_turn:
+            vitek_turn = False
+            ab = random.randint(0,1)
+            if ab == 1:
+                self.lokace =  "chodba"
+        if self.lokace == "01" and vitek_turn:
+            vitek_turn = False
+            acb = random.randint(0,4)
+            if acb != 4:
+                self.lokace = "chodba"
+
+
+
+
 
 
 class Byzdina:
@@ -105,7 +151,7 @@ class Hero:
                 self.lokace = "telocvicna"
         if self.lokace == "01":
             oloved = falsich(
-                "tedka jsi v 01 zde jsi ve slepe ulicce ale zaroven na toto misto vitek chodi nejmin pokud zde chces zustat(ok) pokud chces jit na chodbu(1)",
+                "tedka jsi v 01 zde jsi ve slepe ulicce ale zaroven je tu nejvice lootu pokud zde chces zustat(ok) pokud chces jit na chodbu(1)",
                 ["ok", "1"])
             if oloved == "1":
                 self.lokace = "chodba"
@@ -113,7 +159,7 @@ class Hero:
                 self.lokace = "01"
         if self.lokace == "zachody":
             ovo = falsich(
-                "ted jsi na zachodech na tomto miste neni nejvyssi bezpecnst a jses tu v slepy ulicce ale pokud je ti zde prijemne bud si tu(ok) nebo muzes jit na chodbu (1)",
+                "ted jsi na zachodech na tomto miste neni nejvyssi bezpecnost a jses tu v slepy ulicce ale pokud je ti zde prijemne bud si tu(ok) nebo muzes jit na chodbu (1)",
                 ["1", "ok"])
             if ovo == "ok":
                 self.lokace = "zachody"
@@ -143,12 +189,13 @@ class Hero:
         if self.lokace == "zachody":
             objev = random.choice(["vitkuv mobil", "nic", " klic"])
         if self.lokace == "2patro":
-            random.choice(["priman", "dresink caesar", "nic", "parmezan"])
+            objev = random.choice(["priman", "dresink caesar", "nic", "parmezan"])
+        if objev in self.finds:
+            objev = "nic"
+
         if objev not in self.finds and objev != "nic":
             self.stuff.append(objev)
             self.finds.append(objev)
-        if objev in self.finds:
-            objev = "nic"
         print(f"nasel jsi {objev}")
         if objev == "nic":
             objev = None
@@ -179,15 +226,27 @@ while hra:
         ["1", "2", "3", "4", "5"])
     if explore == "1":
         heroin.Poslech(vitek)
+        limit = 0
     if explore == "2":
-        heroin.Schovani(vitek)
+        if  limit <= 1:
+            heroin.Schovani(vitek)
+            limit +=1
+        else:
+            print("nemuzes se schovavat vickrat za sebou nenene")
     if explore == "error":
         print("spatne jsi neco napsal")
         continue
     if explore == "3":
         heroin.Explore(vitek, heroin.lokace)
+        limit = 0
     if explore == "4":
         heroin.Loot(heroin.lokace, heroin.stuff, heroin.finds)
+        limit = 0
     if explore == "5":
-        print(heroin.stuff)
+        print(f"tvuj batoh obsahuje :{heroin.stuff}")
         continue
+    vitek_motivation += 1
+    if vitek_motivation >= 4:
+        vitek.Pohyb(vitek.lokace)
+        if vitek.lokace == heroin.lokace:
+            vitek.jumpscare(vitek_motivation)
