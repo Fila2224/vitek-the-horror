@@ -1,7 +1,8 @@
 import random
 import sys
 import time
-
+bydzovska_die = False
+bydzovska_live = True
 tadeas_find = False
 lOkace = ["telocvicna", "satna", "chodba", "zachody", "01", "2patro"]
 vztek = 0
@@ -89,8 +90,49 @@ class Vitek:
 class Byzdina:
     def __init__(self, lokace):
         self.lokace = lokace
+    def pohyb(self,lokace):
+        vitek_turn = True
+        while vitek_turn:
+            if self.lokace == "telocvicna" and vitek_turn:
+                if random.randint(0, 2) == 1:
+                    self.lokace = "satna"
+                    vitek_turn = False
+            if self.lokace == "satna" and vitek_turn:
+                vitek_turn = False
+                a = random.randint(0, 3)
+                if a == 3:
+                    self.lokace = "satna"
+                if a == 1 or a == 0:
+                    self.lokace = ("chodba")
+            if self.lokace == "chodba" and vitek_turn:
+                vitek_turn = False
+                b = random.randint(0, 6)
+                if b == 0:
+                    self.lokace = "satna"
+                if b == 1:
+                    self.lokace = "zachody"
+                if b == 5:
+                    self.lokace = "01"
+                if b == 2:
+                    self.lokace = "2patro"
+            if self.lokace == "2patro" and vitek_turn:
+                vitek_turn = False
+                c = random.randint(0, 2)
+                if c == 2 or c == 1:
+                    self.lokace = "chodba"
+            if self.lokace == "zachody" and vitek_turn:
+                vitek_turn = False
+                ab = random.randint(0, 1)
+                if ab == 1:
+                    self.lokace = "chodba"
+            if self.lokace == "01" and vitek_turn:
+                vitek_turn = False
+                acb = random.randint(0, 4)
+                if acb != 4:
+                    self.lokace = "chodba"
 
     def kroksmumkrok(self):
+        print("nekdo tu je")
         for a in range(7):
             print("*krok* *krok* *krok*")
         print("Bydzovska: co tady delas? mate jit spat!!!")
@@ -98,11 +140,12 @@ class Byzdina:
         print("*odchod*")
 
 
+killplace = "bro"
 class Hero:
-    def __init__(self, lokace, stuff, finds,turn):
+    def __init__(self, lokace,turn):
         self.lokace = lokace
-        self.stuff = stuff = []
-        self.finds = finds = ["mobil", "pecivo do bagetky"]
+        self.stuff = ["mobil"]
+        self.finds = ["mobil"]
         self.turn = turn
 
     def Poslech(self, vitek):
@@ -222,9 +265,18 @@ class Hero:
         print(f"nasel jsi {objev}")
         if objev == "nic":
             objev = None
+    def Use(self,lokace,stuff):
+        if stuff == "klic":
+            print(f"zamknul jsi {self.lokace}")
+        if stuff == "tadeas":
+            print("poslal jsi tadease")
+        if stuff == ["vitkuv mobil + tadeas"]:
+            print("kazdych par kol ti tadeas napise kde je vitek")
 
 
-heroin = Hero(lokace, ["pecivo bagety"], [],None)
+
+bydzovska = Byzdina("2patro")
+heroin = Hero(lokace,None)
 vitek = Vitek(lokace, vztek)
 print("cauky mnauky tuto hru jsem naprogramoval na zaklade prespavacky kde vitek byl jeden z hlavnich strachu")
 input("pokracovat")
@@ -268,6 +320,14 @@ while hra:
         limit = 0
     if explore == "5":
         print(f"tvuj batoh obsahuje :{heroin.stuff}")
+        pouziti = falsich("pokud chces pouzit predmet(1) pokud ne (2) ",["1","2"])
+        if pouziti == "1":
+            using = falsich("co za predmet chces pouzit? (napis)", heroin.stuff)
+            if using == "tadeas" and "vitkuv mobil" in heroin.stuff or using == "vitkuv mobil" and "tadeas" in heroin.stuff:
+                print("spolecne s tadeasem si poslal i vitkuv mobil ted ti tadeas cas obcasu napise zda videl vitka")
+                using = ["vitkuv mobil + tadeas"]
+            heroin.stuff.remove(using)
+            heroin.Use(heroin.lokace,using)
         continue
     if vitek.angry <= 10:
         vitek.angry +=1
@@ -276,10 +336,24 @@ while hra:
 
     if vitek.angry >= 4:
         vitek.Pohyb(vitek.lokace)
+        if bydzovska_live:
+            bydzovska.pohyb(bydzovska.lokace)
     if vitek.lokace == heroin.lokace and vitek.angry >= 4:
         vitek.jumpscare(vitek.angry)
-    print(vitek.angry)
-    print(heroin.lokace )
-    print(vitek.lokace)
+    if vitek.lokace == bydzovska.lokace and bydzovska_live:
+        print("bydzovska nasla vitka odnasi ho do telocvicny!")
+        vitek.lokace = "telocvicna"
+
+        if random.randint(2,4) ==3:
+            bydzovska_live = False
+            bydzovsla_die = True
+            print("AAAAAAAAAAAAAaaaaaaaaa0aaAAAAAAAaaaaaaaaaaaAAa")
+            time.sleep(0.2)
+            print("aaaaaaaaAAAAAAAAAAAAAAAAaaaaaaaaaaaaaAAAAAAAAAAAAAAAAaaaaaaAAAAAAAAaaaa")
+            print("AAAAAAAAAAAAAAAA")
+            killplace = bydzovska.lokace
+        bydzovska.lokace = "satna"
+    if heroin.lokace == killplace:
+        print("nasel jsi mrtvou bydzovskou")
     if vitek.angry >=8:
         vitek.anry = 9
