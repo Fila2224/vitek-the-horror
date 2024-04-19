@@ -1,6 +1,13 @@
 import random
 import sys
 import time
+telocvicnaopen = True
+satnaopen = True
+chodbaopen = True
+open01 = True
+zachodopen =  True
+patro2open= True
+
 bydzovska_die = False
 bydzovska_live = True
 tadeas_find = False
@@ -45,41 +52,41 @@ class Vitek:
         vitek_turn = True
         while vitek_turn:
             if self.lokace == "telocvicna" and vitek_turn:
-                if random.randint(0,2) == 1 :
+                if random.randint(0,2) == 1 and satnaopen:
                     self.lokace = "satna"
                     vitek_turn = False
             if self.lokace == "satna" and   vitek_turn:
                 vitek_turn = False
                 a = random.randint(0,3)
-                if a == 3:
+                if a == 3 and satnaopen:
                     self.lokace = "satna"
-                if a == 1 or a==0:
+                if a == 1 or a==0  and chodbaopen:
                     self.lokace = ("chodba")
             if self.lokace == "chodba"and vitek_turn:
                 vitek_turn = False
                 b = random.randint(0,6)
-                if b == 0:
+                if b == 0 and satnaopen:
                     self.lokace = "satna"
-                if b == 1  :
+                if b == 1  and zachodopen:
                     self.lokace ="zachody"
-                if b == 5:
+                if b == 5 and open01:
                     self.lokace = "01"
-                if b ==2 :
+                if b ==2 and patro2open :
                     self.lokace = "2patro"
             if self.lokace == "2patro" and vitek_turn:
                 vitek_turn = False
                 c = random.randint(0,2)
-                if c == 2 or c == 1:
+                if c == 2 or c == 1 and chodbaopen:
                     self.lokace = "chodba"
             if self.lokace == "zachody" and vitek_turn:
                 vitek_turn = False
                 ab = random.randint(0,1)
-                if ab == 1:
+                if ab == 1 and chodbaopen:
                     self.lokace =  "chodba"
             if self.lokace == "01" and vitek_turn:
                 vitek_turn = False
                 acb = random.randint(0,4)
-                if acb != 4:
+                if acb != 4 and chodbaopen:
                     self.lokace = "chodba"
 
 
@@ -265,13 +272,17 @@ class Hero:
         print(f"nasel jsi {objev}")
         if objev == "nic":
             objev = None
-    def Use(self,lokace,stuff):
+    def Use(self,lokace,stuff,vitek):
         if stuff == "klic":
             print(f"zamknul jsi {self.lokace}")
-        if stuff == "tadeas":
-            print("poslal jsi tadease")
         if stuff == ["vitkuv mobil + tadeas"]:
             print("kazdych par kol ti tadeas napise kde je vitek")
+        if stuff == "tadeas":
+            print("poslal jsi tadease")
+        if stuff == "vitkuv mobil":
+            print(f"*blik* *blik* {vitek.lokace}")
+
+
 
 
 
@@ -327,7 +338,7 @@ while hra:
                 print("spolecne s tadeasem si poslal i vitkuv mobil ted ti tadeas cas obcasu napise zda videl vitka")
                 using = ["vitkuv mobil + tadeas"]
             heroin.stuff.remove(using)
-            heroin.Use(heroin.lokace,using)
+            heroin.Use(heroin.lokace,using,vitek)
         continue
     if vitek.angry <= 10:
         vitek.angry +=1
@@ -354,6 +365,6 @@ while hra:
             killplace = bydzovska.lokace
         bydzovska.lokace = "satna"
     if heroin.lokace == killplace:
-        print("nasel jsi mrtvou bydzovskou")
+        print("bydzovska utekla ze skoly")
     if vitek.angry >=8:
-        vitek.anry = 9
+        vitek.angry = 9
