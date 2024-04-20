@@ -7,7 +7,6 @@ chodbaopen = True
 open01 = True
 zachodopen =  True
 patro2open= True
-
 bydzovska_die = False
 bydzovska_live = True
 tadeas_find = False
@@ -17,7 +16,13 @@ lokace = lOkace[0]
 usetreni = 0
 vitek_motivation = 0
 chodba_loot = ["tadeas"]
-
+countertelocvicna = 0
+countersatna = 0
+counterschodba = 0
+patro02counter = 0
+counterzachody = 0
+a = 0
+counter01 = 0
 toasi = None
 
 def falsich(veta, odpovedi):
@@ -55,39 +60,79 @@ class Vitek:
                 if random.randint(0,2) == 1 and satnaopen:
                     self.lokace = "satna"
                     vitek_turn = False
-            if self.lokace == "satna" and   vitek_turn:
+                if satnaopen == False:
+                    print("grrr me tu NIKDO zavirat NEBUDE")
+                    vitek_turn = False
+                    continue
+            if self.lokace == "satna" and  vitek_turn:
                 vitek_turn = False
                 a = random.randint(0,3)
                 if a == 3 and satnaopen:
                     self.lokace = "satna"
+                if a == 3 and satnaopen == False:
+                    print("grrr me tu NIKDO zavirat NEBUDE")
+                    vitek_turn = False
+                    continue
                 if a == 1 or a==0  and chodbaopen:
                     self.lokace = ("chodba")
+                if a ==1 or a ==0 and chodbaopen == False:
+                    print("grrr me tu NIKDO zavirat NEBUDE")
+                    vitek_turn = False
+                    continue
             if self.lokace == "chodba"and vitek_turn:
                 vitek_turn = False
                 b = random.randint(0,6)
                 if b == 0 and satnaopen:
                     self.lokace = "satna"
+                if b == 0 and satnaopen == False:
+                    print("grrr me tu NIKDO zavirat NEBUDE")
+                    vitek_turn = False
+                    continue
                 if b == 1  and zachodopen:
                     self.lokace ="zachody"
+                if b ==1 and zachodopen == False:
+                    print("grrr me tu NIKDO zavirat NEBUDE")
+                    vitek_turn = False
+                    continue
                 if b == 5 and open01:
                     self.lokace = "01"
-                if b ==2 and patro2open :
+                if b == 5 and open01 == False:
+                    print("grrr me tu NIKDO zavirat NEBUDE")
+                    vitek_turn = False
+                    continue
+                if b ==2 and patro2open:
                     self.lokace = "2patro"
+                if b ==2 and patro2open == False:
+                    print("grrr me tu NIKDO zavirat NEBUDE")
+                    vitek_turn = False
+                    continue
             if self.lokace == "2patro" and vitek_turn:
                 vitek_turn = False
                 c = random.randint(0,2)
                 if c == 2 or c == 1 and chodbaopen:
                     self.lokace = "chodba"
+                if c== 2 or c ==1 and chodbaopen == False:
+                    print("grrr me tu NIKDO zavirat NEBUDE")
+                    vitek_turn = False
+                    continue
             if self.lokace == "zachody" and vitek_turn:
                 vitek_turn = False
                 ab = random.randint(0,1)
                 if ab == 1 and chodbaopen:
                     self.lokace =  "chodba"
+                if ab == 1 and chodbaopen == False:
+                    print("grrr me tu NIKDO zavirat NEBUDE")
+                    vitek_turn = False
+                    continue
             if self.lokace == "01" and vitek_turn:
                 vitek_turn = False
                 acb = random.randint(0,4)
                 if acb != 4 and chodbaopen:
                     self.lokace = "chodba"
+                if acb != 4 and chodbaopen == False:
+                    print("grrr me tu NIKDO zavirat NEBUDE")
+                    vitek_turn = False
+                    continue
 
 
 
@@ -101,7 +146,7 @@ class Byzdina:
         vitek_turn = True
         while vitek_turn:
             if self.lokace == "telocvicna" and vitek_turn:
-                if random.randint(0, 2) == 1:
+                if random.randint(0, 2) == 1 and satnaopen:
                     self.lokace = "satna"
                     vitek_turn = False
             if self.lokace == "satna" and vitek_turn:
@@ -175,6 +220,7 @@ class Hero:
         playturn = True
         while playturn:
             if self.lokace == "chodba" and playturn:
+                toast = "notok"
                 odpoved = falsich(
                     "prave jsi na chodbe muzes jit do satny(1), na zachod(2),do 2.patra(3) ci do 01(4) nebo delat jine aktivity",
                     ["ok", "1", "2", "3", "4"])
@@ -249,6 +295,7 @@ class Hero:
 
 
 
+
     def Loot(self, lokace, stuff, finds):
         if self.lokace == "satna":
             objev = (random.choice(["nic", "klic", "maso do bagety"]))
@@ -284,7 +331,18 @@ class Hero:
 
 
 
-
+if countertelocvicna == 0:
+    telocvicnaopen = True
+if countersatna == 0:
+    satnaopen = True
+if counterschodba == 0:
+    chodbaopen = True
+if patro02counter == 0:
+    patro02open = True
+if counterzachody == 0:
+    zachodopen
+if counter01 == 0:
+    open01 = True
 
 bydzovska = Byzdina("2patro")
 heroin = Hero(lokace,None)
@@ -326,6 +384,11 @@ while hra:
     if explore == "3":
         heroin.Explore(vitek, heroin.lokace,heroin.turn)
         limit = 0
+    if bydzovska.lokace == heroin.lokace:
+        bydzovska.kroksmumkrok()
+        heroin.lokace = "telocvicna"
+        print("zamkla je v telocvicne")
+        satnaopen = False
     if explore == "4":
         heroin.Loot(heroin.lokace, heroin.stuff, heroin.finds)
         limit = 0
@@ -337,6 +400,25 @@ while hra:
             if using == "tadeas" and "vitkuv mobil" in heroin.stuff or using == "vitkuv mobil" and "tadeas" in heroin.stuff:
                 print("spolecne s tadeasem si poslal i vitkuv mobil ted ti tadeas cas obcasu napise zda videl vitka")
                 using = ["vitkuv mobil + tadeas"]
+            if using == "klic":
+                if heroin.lokace == "telocvicna":
+                    telocvicnaopen = False
+                    countertelocvicna = 3
+                if heroin.lokace == "satna":
+                    satnaopen = False
+                    countersatna = 3
+                if heroin.lokace == "chodba":
+                    chodbaopen = False
+                    counterchodba = 3
+                if heroin.lokace == "zachody":
+                    zachodopen = False
+                    counterzachody = 3
+                if heroin.lokace == "01":
+                    open01 = False
+                    counter01 = 3
+                if heroin.lokace == "2patro":
+                    patro2open = False
+                    patro2counter = 3
             heroin.stuff.remove(using)
             heroin.Use(heroin.lokace,using,vitek)
         continue
@@ -344,7 +426,30 @@ while hra:
         vitek.angry +=1
     if heroin.turn =="ok":
         continue
-
+    if countertelocvicna == 0:
+        telocvicnaopen = True
+    if countersatna == 0:
+        satnaopen = True
+    if counterschodba == 0:
+        chodbaopen = True
+    if patro02counter == 0:
+        patro02open = True
+    if counterzachody == 0:
+        zachodopen = True
+    if counter01 == 0:
+        open01 = True
+    if countertelocvicna >= 1 and countertelocvicna <= 1:
+        countertelocvicna -=1
+    if countersatna >= 1 and countersatna <= 1:
+        countersatna -= 1
+    if counterschodba >= 1 and counterchodba <= 1 :
+        counterschodba -= 1
+    if counterzachody >= 1 and counterzachody <= 1:
+        counterzachody -=1
+    if counter01 >= 1 and counterzachody <= 1:
+        counter01 -= 1
+    if patro02counter >= 1 and patro2counter <= 1:
+        patro02counter -=1
     if vitek.angry >= 4:
         vitek.Pohyb(vitek.lokace)
         if bydzovska_live:
@@ -352,10 +457,11 @@ while hra:
     if vitek.lokace == heroin.lokace and vitek.angry >= 4:
         vitek.jumpscare(vitek.angry)
     if vitek.lokace == bydzovska.lokace and bydzovska_live:
-        print("bydzovska nasla vitka odnasi ho do telocvicny!")
+        print("bydzovska nasla vitka odnasi ho do telocvicny! a zamkla ho tam")
         vitek.lokace = "telocvicna"
-
-        if random.randint(2,4) ==3:
+        satnaopen = False
+        countersatna = 3
+        if random.randint(1,15) ==5:
             bydzovska_live = False
             bydzovsla_die = True
             print("AAAAAAAAAAAAAaaaaaaaaa0aaAAAAAAAaaaaaaaaaaaAAa")
@@ -368,3 +474,8 @@ while hra:
         print("bydzovska utekla ze skoly")
     if vitek.angry >=8:
         vitek.angry = 9
+    if heroin.lokace == bydzovska.lokace:
+        bydzovska.kroksmumkrok()
+        print("bydzovska te odnesla do telocvicny")
+        satnaopen = False
+        print("zamkla satnu aby jsi nemohl utect")
