@@ -418,9 +418,6 @@ while hra:
             if using == "tadeas" and "vitkuv mobil" in heroin.stuff or using == "vitkuv mobil" and "tadeas" in heroin.stuff:
                 print("spolecne s tadeasm si poslal i vitkuv mobil ted ti tadeas cas obcasu napise zda videl vitka a navic je zde sance ze ho zavre do sklepa")
                 using = ["vitkuv mobil + tadeas"]
-                heroin.stuff.remove("vitkuv mobil" )
-                heroin.stuff.remove("tadeas")
-                continue
                 motadeas = True
                 tadeaspower = True
             if using == "priman":
@@ -428,7 +425,6 @@ while hra:
                 primanpower = True
             if using == "mobil":
                 print("*blik* *blik* - zda se ze mobil uz muze fungovat pouze pro komunikaci s ostatnimi mobily ")
-                continue
             if using == "klic":
                 if heroin.lokace == "telocvicna":
                     telocvicnaopen = False
@@ -451,6 +447,9 @@ while hra:
             if using == "bageta caesar recept":
                 print(
                     "slozeni bagety :rajcata do bagety maso do bagety and bageta caesar recept and pecivo od bagety and dresink caesar parmezan")
+                continue
+            if using not in heroin.stuff:
+                print("asi jsi neco spatne napsal pac v batohu nic takoveho nemas")
                 continue
             if using == "dresing caesar" or using == "parmezan" or using == "maso do bagety" or using == "salat do  bagety" or using == "pecivo od bagety":
                 print("bageta bageta bageta ale neco mi chybi")
