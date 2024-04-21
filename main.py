@@ -1,15 +1,21 @@
 import random
 import sys
 import time
+vitekveznen = False
+tadeaspower = False
+bydlokace = "abc"
+primanpower = False
 telocvicnaopen = True
 satnaopen = True
 chodbaopen = True
 open01 = True
+tadeaskillplace = " "
 zachodopen =  True
 patro2open= True
 bydzovska_die = False
 bydzovska_live = True
 tadeas_find = False
+motadeas = False
 lOkace = ["telocvicna", "satna", "chodba", "zachody", "01", "2patro"]
 vztek = 0
 lokace = lOkace[0]
@@ -47,7 +53,7 @@ class Vitek:
         for i in range(random.randint(1, 20)):
             print("*krok* *krok* *krok*")
             time.sleep(0.5)
-        cislo -= usetreni + self.angry/4
+        cislo = self.angry - usetreni
         if cislo >= 10:
             print("baf a mam te chichichichaaaaa")
             time.sleep(2)
@@ -187,9 +193,12 @@ class Byzdina:
         print("nekdo tu je")
         for a in range(7):
             print("*krok* *krok* *krok*")
+            time.sleep(0.5)
+
         print("Bydzovska: co tady delas? mate jit spat!!!")
-        time.sleep(5)
+        time.sleep(2)
         print("*odchod*")
+        self.lokace = random.choice(["zachody"])
 
 
 killplace = "bro"
@@ -219,6 +228,7 @@ class Hero:
     def Explore(self, vitek, lokace,turn):
         playturn = True
         while playturn:
+            toast = "ads"
             if self.lokace == "chodba" and playturn:
                 toast = "notok"
                 odpoved = falsich(
@@ -289,8 +299,8 @@ class Hero:
                     toast = "ok"
                 if lovoto == "1":
                     self.lokace = "chodba"
-                if toast == "ok":
-                    self.turn = "ok"
+            if toast == "ok":
+                self.turn = "ok"
                 playturn = False
 
 
@@ -298,18 +308,18 @@ class Hero:
 
     def Loot(self, lokace, stuff, finds):
         if self.lokace == "satna":
-            objev = (random.choice(["nic", "klic", "maso do bagety"]))
+            objev = (random.choice(["klic", "maso do bagety"]))
         if self.lokace == "telocvicna":
             objev = "nic"
             print("zde nic k nalezeni neni ")
         if self.lokace == "chodba":
-            objev = random.choice(["tadeas", "nic", "nic", "rajcata do bagety"])
+            objev = random.choice(["tadeas",  "rajcata do bagety"])
         if self.lokace == "01":
-            objev = random.choice(["bageta caesar recept", "salat do  bagety", "klic ", "pecivo od bagety"])
+            objev = random.choice(["bageta caesar recept", "salat do  bagety", "pecivo od bagety"])
         if self.lokace == "zachody":
-            objev = random.choice(["vitkuv mobil", "nic", " klic"])
+            objev = random.choice(["vitkuv mobil"])
         if self.lokace == "2patro":
-            objev = random.choice(["priman", "dresink caesar", "nic", "parmezan"])
+            objev = random.choice(["priman", "dresink caesar", "parmezan"])
         if objev in self.finds:
             objev = "nic"
 
@@ -320,7 +330,7 @@ class Hero:
         if objev == "nic":
             objev = None
     def Use(self,lokace,stuff,vitek):
-        if stuff == "klic":
+        if stuff == "klic" or stuff == " klic" or stuff == "klic ":
             print(f"zamknul jsi {self.lokace}")
         if stuff == ["vitkuv mobil + tadeas"]:
             print("kazdych par kol ti tadeas napise kde je vitek")
@@ -328,6 +338,9 @@ class Hero:
             print("poslal jsi tadease")
         if stuff == "vitkuv mobil":
             print(f"*blik* *blik* {vitek.lokace}")
+        else:
+            print("  ")
+
 
 
 
@@ -373,21 +386,21 @@ while hra:
         heroin.Poslech(vitek)
         limit = 0
     if explore == "2":
+        if limit != 0:
+            print("vickrat za sebou se neschovas")
+            continue
         if  limit <= 1:
             heroin.Schovani(vitek)
             limit +=1
-        else:
-            print("nemuzes se schovavat vickrat za sebou nenene")
+        #else:
+            #print("nemuzes se schovavat vickrat za sebou nenene")
     if explore == "error":
         print("spatne jsi neco napsal")
         continue
     if explore == "3":
         heroin.Explore(vitek, heroin.lokace,heroin.turn)
         limit = 0
-    if bydzovska.lokace == heroin.lokace:
-        bydzovska.kroksmumkrok()
-        heroin.lokace = "telocvicna"
-        print("zamkla je v telocvicne")
+
         satnaopen = False
     if explore == "4":
         heroin.Loot(heroin.lokace, heroin.stuff, heroin.finds)
@@ -397,9 +410,21 @@ while hra:
         pouziti = falsich("pokud chces pouzit predmet(1) pokud ne (2) ",["1","2"])
         if pouziti == "1":
             using = falsich("co za predmet chces pouzit? (napis)", heroin.stuff)
+            if using == " klic" or using == "klic " or using == "  klic":
+                using = "klic"
+            if using == "tadeas":
+                print("kdyz tadeas potka vitka je zde urcita sance ze ho zavre do sklepa")
+                tadeaspower = True
             if using == "tadeas" and "vitkuv mobil" in heroin.stuff or using == "vitkuv mobil" and "tadeas" in heroin.stuff:
-                print("spolecne s tadeasem si poslal i vitkuv mobil ted ti tadeas cas obcasu napise zda videl vitka")
+                print("spolecne s tadeasm si poslal i vitkuv mobil ted ti tadeas cas obcasu napise zda videl vitka a navic je zde sance ze ho zavre do sklepa")
                 using = ["vitkuv mobil + tadeas"]
+                motadeas = True
+                tadeaspower = True
+            if using == "priman":
+                bydlokace = falsich("priman odlakava bydzovskou napis kam chces aby priman bydzovskou odlakal?(telocvicna satna chodba 01 zachody 2patro)",["telocvicna","satna","chodba","01","zachody","2patro"])
+                primanpower = True
+            if using == "mobil":
+                print("*blik* *blik* - zda se ze mobil uz muze fungovat pouze pro komunikaci s ostatnimi mobily ")
             if using == "klic":
                 if heroin.lokace == "telocvicna":
                     telocvicnaopen = False
@@ -419,6 +444,14 @@ while hra:
                 if heroin.lokace == "2patro":
                     patro2open = False
                     patro2counter = 3
+            if using == "bageta caesar recept":
+                print(
+                    "slozeni bagety :rajcata do bagety maso do bagety and bageta caesar recept and pecivo od bagety and dresink caesar parmezan")
+                continue
+            if using == "dresing caesar" or using == "parmezan" or using == "maso do bagety" or using == "salat do  bagety" or using == "pecivo od bagety":
+                print("bageta bageta bageta ale neco mi chybi")
+                continue
+            print(using)
             heroin.stuff.remove(using)
             heroin.Use(heroin.lokace,using,vitek)
         continue
@@ -452,7 +485,7 @@ while hra:
         patro02counter -=1
     if vitek.angry >= 4:
         vitek.Pohyb(vitek.lokace)
-        if bydzovska_live:
+        if bydzovska_live and primanpower == False:
             bydzovska.pohyb(bydzovska.lokace)
     if vitek.lokace == heroin.lokace and vitek.angry >= 4:
         vitek.jumpscare(vitek.angry)
@@ -460,8 +493,10 @@ while hra:
         print("bydzovska nasla vitka odnasi ho do telocvicny! a zamkla ho tam")
         vitek.lokace = "telocvicna"
         satnaopen = False
-        countersatna = 3
-        if random.randint(1,15) ==5:
+        countersatna= 3
+    if bydzovska_live == False:
+        bydzovska.lokace = "sklep"
+        if random.randint(1,15) ==2:
             bydzovska_live = False
             bydzovsla_die = True
             print("AAAAAAAAAAAAAaaaaaaaaa0aaAAAAAAAaaaaaaaaaaaAAa")
@@ -472,10 +507,66 @@ while hra:
         bydzovska.lokace = "satna"
     if heroin.lokace == killplace:
         print("bydzovska utekla ze skoly")
-    if vitek.angry >=8:
-        vitek.angry = 9
-    if heroin.lokace == bydzovska.lokace:
-        bydzovska.kroksmumkrok()
-        print("bydzovska te odnesla do telocvicny")
-        satnaopen = False
-        print("zamkla satnu aby jsi nemohl utect")
+    if vitek.angry >=20:
+        vitek.angry = 19
+    if heroin.lokace == bydzovska.lokace and bydzovska_live:
+        if random.randint(1,4) ==3:
+            bydzovska.kroksmumkrok()
+            heroin.lokace = "telocvicna"
+            print("bydzovska te odnesla do telocvicny")
+    if primanpower:
+        bydzovska.lokace = bydlokace
+    if countersatna != 0:
+        countersatna -=1
+    if tadeaspower:
+        if random.randint(1,3) == 2 and vitekveznen == False:
+            print(f"vitek je zavren ve sklepe na dobu neurcitou")
+            vitek.lokace = "veznen"
+            if random.randint(1,15):
+                tadeaspower = False
+                print("auuu tohle se nedela")
+                tadeaskillplace = vitek.lokace
+    if random.randint(1,5) == 2 and vitekveznen:
+        print("grrrr me uz nikdo zavirat ve sklepe dale nebude nebyl tam muj mobil!")
+        vitek.lokace = "chodba"
+    if motadeas and tadeaspower:
+        if random.randint(1,3) == 2:
+            print(f"Tadeas: vitek je v {vitek.lokace}")
+    if heroin.lokace == tadeaskillplace:
+        print("TADEASI CO TI TO UDELAL!!??!?!?")
+        print("*tadeas je mrtev );*")
+    if "rajcata do bagety" in heroin.stuff and "maso do bagety" in heroin.stuff and "bageta caesar recept"in heroin.stuff and "pecivo od bagety" in heroin.stuff and "dresink caesar" in heroin.stuff and  "parmezan" in heroin.stuff:
+        print("..........")
+        time.sleep(5)
+        print(".......")
+        time.sleep(2)
+        print("unknown:BAGETA")
+        print("tomas: BAGETA")
+        time.sleep(2)
+        print("tomas:kde je vitek jdu ho sejmnout...")
+        hra = False
+time.sleep(2)
+print("vitek: aaaaaaaaaaaaaau ")
+time.sleep(2)
+print("...")
+print("vitek:grrrr")
+print("*Vitek je spacifikovan*")
+time.sleep(3)
+print("nasledujici den:")
+print("vitek: co si koupim za bagetu? treba bagetu caesar")
+time.sleep(2)
+print("automat: ...")
+print("automat:chybi vam 20kc")
+time.sleep(2)
+print("grrrr")
+acb = input("vitek: hej hej jo ty nemas na pujceni 20kc?(ano)/ne")
+if acb == "ne":
+    print("vitek: spatna odpoved")
+    print("konec hry")
+    sys.exit(1)
+
+else:
+    print("diky ale uz ti je nevratim chichichicha")
+print("legendy pravi ze vitek uz nikdy nikomu neublizil")
+sys.exit(128)
+
