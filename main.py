@@ -418,6 +418,9 @@ while hra:
             if using == "tadeas" and "vitkuv mobil" in heroin.stuff or using == "vitkuv mobil" and "tadeas" in heroin.stuff:
                 print("spolecne s tadeasm si poslal i vitkuv mobil ted ti tadeas cas obcasu napise zda videl vitka a navic je zde sance ze ho zavre do sklepa")
                 using = ["vitkuv mobil + tadeas"]
+                heroin.stuff.remove("vitkuv mobil" )
+                heroin.stuff.remove("tadeas")
+                continue
                 motadeas = True
                 tadeaspower = True
             if using == "priman":
@@ -425,6 +428,7 @@ while hra:
                 primanpower = True
             if using == "mobil":
                 print("*blik* *blik* - zda se ze mobil uz muze fungovat pouze pro komunikaci s ostatnimi mobily ")
+                continue
             if using == "klic":
                 if heroin.lokace == "telocvicna":
                     telocvicnaopen = False
